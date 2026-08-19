@@ -1,1 +1,427 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi Seva Finder</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f7fb;
+color:#172033;
+}
+header{
+background:linear-gradient(135deg,#0757d5,#123d91);
+color:white;
+text-align:center;
+padding:35px 15px;
+}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;font-size:15px}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.search{
+background:white;
+padding:18px;
+margin-top:-25px;
+border-radius:15px;
+box-shadow:0 5px 20px #0002;
+}
+
+.search input{
+width:100%;
+padding:15px;
+border:1px solid #ddd;
+border-radius:10px;
+font-size:16px;
+}
+
+.categories{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin:20px 0;
+}
+
+.categories button{
+border:0;
+padding:10px 15px;
+border-radius:20px;
+background:white;
+cursor:pointer;
+}
+
+.categories button.active{
+background:#0757d5;
+color:white;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+gap:18px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:20px;
+box-shadow:0 3px 15px #0001;
+}
+
+.card h2{
+font-size:19px;
+margin:8px 0;
+}
+
+.icon{
+font-size:30px;
+}
+
+.category{
+color:#0757d5;
+font-size:13px;
+font-weight:bold;
+}
+
+.documents{
+margin-top:15px;
+}
+
+.documents li{
+margin:6px 0;
+font-size:14px;
+}
+
+.fee{
+background:#eaf8ed;
+padding:10px;
+border-radius:8px;
+margin-top:15px;
+font-weight:bold;
+}
+
+.buttons{
+display:flex;
+gap:8px;
+margin-top:15px;
+}
+
+.buttons a{
+flex:1;
+text-align:center;
+padding:10px;
+border-radius:8px;
+text-decoration:none;
+font-size:13px;
+}
+
+.official{
+background:#0757d5;
+color:white;
+}
+
+footer{
+margin-top:40px;
+background:#172033;
+color:white;
+text-align:center;
+padding:25px;
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🇮🇳 Delhi Seva Finder</h1>
+<p>Delhi & Central Government Services</p>
+</header>
+
+<div class="container">
+
+<div class="search">
+<input
+id="search"
+type="text"
+placeholder="Service search karein... Aadhaar, PAN, Birth Certificate..."
+oninput="showServices()"
+>
+</div>
+
+<div class="categories">
+<button class="active" onclick="setCategory('All',this)">All</button>
+<button onclick="setCategory('Identity',this)">Identity</button>
+<button onclick="setCategory('Certificates',this)">Certificates</button>
+<button onclick="setCategory('Transport',this)">Transport</button>
+<button onclick="setCategory('Labour',this)">Labour</button>
+<button onclick="setCategory('Education',this)">Education</button>
+<button onclick="setCategory('Schemes',this)">Delhi Schemes</button>
+</div>
+
+<div class="grid" id="services"></div>
+
+</div>
+
+<footer>
+Delhi Seva Finder<br>
+Official government sources should always be verified before applying.
+</footer>
+
+<script>
+
+const services = [
+
+{
+name:"Aadhaar Card",
+icon:"🪪",
+category:"Identity",
+documents:[
+"Aadhaar enrolment ke liye valid identity proof",
+"Address proof",
+"Applicable supporting documents"
+],
+fee:"New enrolment: Free",
+url:"https://uidai.gov.in/"
+},
+
+{
+name:"PAN Card",
+icon:"💳",
+category:"Identity",
+documents:[
+"Identity proof",
+"Address proof",
+"Date of birth proof"
+],
+fee:"Application type ke according",
+url:"https://www.incometax.gov.in/"
+},
+
+{
+name:"Birth Certificate",
+icon:"👶",
+category:"Certificates",
+documents:[
+"Birth related proof",
+"Parents/applicant identity proof",
+"Address proof",
+"Delayed registration mein additional documents"
+],
+fee:"Service ke according",
+url:"https://delhi.gov.in/"
+},
+
+{
+name:"Death Certificate",
+icon:"📜",
+category:"Certificates",
+documents:[
+"Death related proof",
+"Applicant identity proof",
+"Required registration documents"
+],
+fee:"Service ke according",
+url:"https://delhi.gov.in/"
+},
+
+{
+name:"Income Certificate",
+icon:"💰",
+category:"Certificates",
+documents:[
+"Identity proof",
+"Address proof",
+"Income related documents",
+"Applicable declaration/affidavit"
+],
+fee:"Check official e-District portal",
+url:"https://edistrict.delhi.gov.in/"
+},
+
+{
+name:"Caste Certificate",
+icon:"📄",
+category:"Certificates",
+documents:[
+"Identity proof",
+"Residence proof",
+"Caste related supporting documents"
+],
+fee:"Check official e-District portal",
+url:"https://edistrict.delhi.gov.in/"
+},
+
+{
+name:"Driving Licence",
+icon:"🚗",
+category:"Transport",
+documents:[
+"Age proof",
+"Address proof",
+"Identity proof",
+"Medical certificate where applicable"
+],
+fee:"Service ke according",
+url:"https://parivahan.gov.in/"
+},
+
+{
+name:"e-Shram Card",
+icon:"👷",
+category:"Labour",
+documents:[
+"Aadhaar",
+"Aadhaar linked mobile number",
+"Bank account details"
+],
+fee:"Free",
+url:"https://eshram.gov.in/"
+},
+
+{
+name:"Passport",
+icon:"🌍",
+category:"Identity",
+documents:[
+"Address proof",
+"Date of birth proof",
+"Category-specific documents"
+],
+fee:"Passport category ke according",
+url:"https://www.passportindia.gov.in/"
+},
+
+{
+name:"Voter ID",
+icon:"🗳️",
+category:"Identity",
+documents:[
+"Age proof",
+"Address proof",
+"Photograph"
+],
+fee:"Free",
+url:"https://voters.eci.gov.in/"
+},
+
+{
+name:"Delhi Government Schemes",
+icon:"🏛️",
+category:"Schemes",
+documents:[
+"Scheme ke according documents",
+"Identity proof",
+"Delhi residence proof",
+"Income/category documents where applicable"
+],
+fee:"Scheme ke according",
+url:"https://delhi.gov.in/"
+}
+
+];
+
+let category="All";
+
+function setCategory(value,button){
+
+category=value;
+
+document.querySelectorAll(".categories button")
+.forEach(b=>b.classList.remove("active"));
+
+button.classList.add("active");
+
+showServices();
+}
+
+function showServices(){
+
+const search=
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const container=
+document.getElementById("services");
+
+container.innerHTML="";
+
+services
+.filter(service=>{
+
+const categoryMatch=
+category==="All" ||
+service.category===category;
+
+const text=
+(service.name+" "+
+service.category+" "+
+service.documents.join(" "))
+.toLowerCase();
+
+return categoryMatch &&
+text.includes(search);
+
+})
+.forEach(service=>{
+
+container.innerHTML+=`
+
+<div class="card">
+
+<div class="icon">$`{service.icon}</div>
+
+<h2>`${service.name}</h2>
+
+<div class="category">
+$`{service.category}
+</div>
+
+<div class="documents">
+<b>📄 Required Documents</b>
+
+<ul>
+${service.documents .map(d=><li>${d}&lt;/li>)
+.join("")}
+</ul>
+</div>
+
+<div class="fee">
+💰 Fee: `${service.fee}
+</div>
+
+<div class="buttons">
+
+<a
+class="official"
+href="${service.url}"
+target="_blank"
+>
+Official Website
+</a>
+
+</div>
+
+</div>
+
+`;
+
+});
+}
+
+showServices();
+
+</script>
+
+</body>
+</html>
