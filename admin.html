@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - Delhi Seva AI Manager</title>
+  <title>Admin Portal - Delhi Seva Manager</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -12,206 +12,182 @@
     header { border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     header h1 { font-size: 20px; color: #60a5fa; }
     .nav-link { color: #94a3b8; text-decoration: none; font-size: 13px; }
+    .nav-link:hover { color: #fff; }
     .panel { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
     h2 { font-size: 15px; margin-bottom: 12px; color: #cbd5e1; text-transform: uppercase; }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 500; }
-    input[type="text"], input[type="password"], textarea, select { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #fff; font-size: 14px; outline: none; }
+    input[type="text"], textarea, select { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #fff; font-size: 14px; outline: none; }
     input:focus, textarea:focus, select:focus { border-color: #3b82f6; }
     .btn { background: #2563eb; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; }
     .btn:hover { background: #1d4ed8; }
-    .btn-success { background: #10b981; }
-    .btn-clear { background: #475569; margin-left: 8px; }
-    .review-box { display: none; background: #111827; border: 2px dashed #3b82f6; border-radius: 10px; padding: 20px; margin-top: 20px; }
-    .badge-status { background: #10b981; color: #022c22; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-    .loader { display: none; color: #60a5fa; font-size: 14px; margin-top: 10px; }
+    .btn-green { background: #10b981; }
+    .btn-green:hover { background: #059669; }
+    .output-box { background: #022c22; border: 1px solid #059669; padding: 15px; border-radius: 8px; margin-top: 15px; display: none; }
+    .code-area { font-family: monospace; font-size: 12px; background: #0f172a; padding: 10px; border-radius: 4px; color: #34d399; width: 100%; height: 180px; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <header>
-      <h1>⚙️ Delhi Seva AI Admin Hub</h1>
+      <h1>⚙️ Delhi Seva Admin Manager</h1>
       <a href="index.html" class="nav-link" target="_blank">Live Website &rarr;</a>
     </header>
 
-    <!-- AI Scheme Extractor -->
+    <!-- AI Helper -->
     <div class="panel">
-      <h2>1. AI Scheme & Service Extractor</h2>
-      <p style="font-size:13px; color:#94a3b8; margin-bottom:12px;">Kisi bhi service ya nayi scheme ka naam/details likhein:</p>
-      
-      <div class="form-group">
-        <label>Scheme Name or Circular Text:</label>
-        <textarea id="rawInput" rows="3" placeholder="Jaise: Delhi Lakshmi Yojna ₹2500 monthly, Ration Card, ya Solar Subsidy"></textarea>
+      <h2>1. AI Auto-Fill Helper</h2>
+      <p style="font-size:13px; color:#94a3b8; margin-bottom:10px;">Kisi scheme ka naam likhein (jaise Lakshmi Yojna, Ration, Solar), AI form automatically fill karega:</p>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="aiInput" placeholder="Scheme name likhein..." />
+        <button class="btn" onclick="autoFillAI()">🤖 Auto-Fill</button>
       </div>
-      <button class="btn" onclick="runAnalysis()">🤖 Run AI Analysis</button>
-      <div id="loader" class="loader">AI official rules analyze kar raha hai...</div>
+    </div>
 
-      <!-- Review & Approval Box -->
-      <div id="reviewBox" class="review-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h3 style="color:#60a5fa; font-size:16px;">Verified Draft (Review & Edit)</h3>
-          <span class="badge-status">READY FOR APPROVAL</span>
-        </div>
+    <!-- Manual & Editable Form -->
+    <div class="panel">
+      <h2>2. Service Details (Manual / Edit)</h2>
 
-        <div class="form-group">
-          <label>Service / Scheme Name:</label>
-          <input type="text" id="draftName" />
-        </div>
+      <div class="form-group">
+        <label>Service / Scheme Name:</label>
+        <input type="text" id="sName" placeholder="e.g. Delhi Mukhyamantri Solar Policy" />
+      </div>
 
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="form-group">
           <label>Category:</label>
-          <select id="draftCategory">
+          <select id="sCat">
             <option value="Schemes">Schemes</option>
             <option value="Identity">Identity</option>
             <option value="Certificates">Certificates</option>
             <option value="Transport">Transport</option>
             <option value="Passport">Passport</option>
             <option value="Pension">Pension</option>
-            <option value="Scholarship">Scholarship</option>
           </select>
         </div>
-
         <div class="form-group">
           <label>Official Govt Fee:</label>
-          <input type="text" id="draftFee" />
+          <input type="text" id="sFee" placeholder="e.g. ₹0 (Free) or ₹100" />
         </div>
+      </div>
 
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="form-group">
           <label>Processing Time:</label>
-          <input type="text" id="draftTime" />
+          <input type="text" id="sTime" placeholder="e.g. 15 - 30 Days" />
         </div>
-
         <div class="form-group">
           <label>Eligibility Criteria:</label>
-          <input type="text" id="draftEligibility" />
+          <input type="text" id="sElig" placeholder="e.g. Delhi residents age 18+" />
         </div>
+      </div>
 
-        <div class="form-group">
-          <label>Short Description:</label>
-          <textarea id="draftDesc" rows="2"></textarea>
-        </div>
+      <div class="form-group">
+        <label>Short Description:</label>
+        <textarea id="sDesc" rows="2" placeholder="Short 1-line description"></textarea>
+      </div>
 
-        <div class="form-group">
-          <label>Required Documents (Har line mein ek document):</label>
-          <textarea id="draftDocs" rows="5"></textarea>
-        </div>
+      <div class="form-group">
+        <label>Required Documents (Har line mein ek document likhein):</label>
+        <textarea id="sDocs" rows="5" placeholder="Aadhaar Card&#10;Voter ID Card&#10;Bank Passbook"></textarea>
+      </div>
 
-        <button class="btn btn-success" onclick="approveService()">✅ Approve & Save Service</button>
-        <button class="btn btn-clear" onclick="document.getElementById('reviewBox').style.display='none'">Discard</button>
+      <button class="btn btn-green" onclick="generateSnippet()">✅ Generate Code for data.js</button>
+
+      <!-- Output Area -->
+      <div id="outputBox" class="output-box">
+        <h4 style="color:#6ee7b7; margin-bottom:6px;">Ready to Paste!</h4>
+        <p style="font-size:12px; color:#a7f3d0;">Is code ko copy karke apni <b>data.js</b> file ke bracket <code>[ ... ]</code> ke aakhir mein paste kar dein:</p>
+        <textarea id="codeOutput" class="code-area" readonly></textarea>
+        <button class="btn" style="margin-top:8px; font-size:12px; padding:6px 12px;" onclick="copyOutput()">📋 Copy to Clipboard</button>
       </div>
     </div>
   </div>
 
   <script>
-    const knowledgeBase = {
+    const presets = {
       "lakshmi": {
         name: "Delhi Mukhyamantri Mahila Samman / Lakshmi Yojna",
-        category: "Schemes",
+        cat: "Schemes",
         fee: "₹0 (Free)",
-        processing_time: "21 - 30 Days",
-        eligibility: "Delhi resident women (Age 18+), Delhi Voter ID holder, Non-taxpayer, Non-govt employee",
-        desc: "Financial assistance of ₹2,500 per month for adult women residing in Delhi.",
-        docs: [
-          "Aadhaar Card (Linked with active Mobile Number)",
-          "Delhi Voter ID Card (Mandatory for Delhi residence proof)",
-          "Bank Account Passbook (Aadhaar linked / DBT enabled)",
-          "Self-Declaration Form (Non-taxpayer & non-govt employee)",
-          "Passport Size Photograph"
-        ]
-      },
-      "ration": {
-        name: "Delhi Ration Card (NFSA / AAY)",
-        category: "Certificates",
-        fee: "₹0 (Free)",
-        processing_time: "30 - 45 Days",
-        eligibility: "Delhi resident families meeting income/deprivation criteria",
-        desc: "Subsidized food grains card issued under National Food Security Act by Food & Civil Supplies Dept.",
-        docs: [
-          "Family Head (Female) Aadhaar Card",
-          "Aadhaar Cards of all family members",
-          "Electricity Bill / Rent Agreement / Water Bill (Delhi Address)",
-          "Income Certificate / BPL Proof",
-          "Combined Family Photograph"
-        ]
+        time: "21 - 30 Days",
+        elig: "Delhi female resident (Age 18+), Delhi Voter ID holder, Non-taxpayer",
+        desc: "Monthly financial assistance of ₹2,500 for eligible adult women in Delhi.",
+        docs: "Aadhaar Card (Mobile Number linked)\nDelhi Voter ID Card (Mandatory for residence proof)\nBank Account Passbook (Aadhaar linked / DBT enabled)\nSelf-Declaration Form (Non-taxpayer & non-govt employee)\nPassport Size Photograph"
       },
       "solar": {
         name: "Delhi Solar Policy Subsidy Scheme",
-        category: "Schemes",
+        cat: "Schemes",
         fee: "₹0 (Application Free)",
-        processing_time: "30 Days",
-        eligibility: "Delhi residential electricity consumers installing rooftop solar panels",
-        desc: "State rooftop solar subsidy along with net-metering benefits from Delhi DISCOMs.",
-        docs: [
-          "Latest Electricity Bill (CA Number)",
-          "Aadhaar Card of Electricity Consumer",
-          "Property Ownership Proof / NOC",
-          "Bank Account Details (for DBT subsidy)",
-          "Rooftop Area Photograph"
-        ]
+        time: "30 Days",
+        elig: "Delhi residential electricity consumers installing rooftop solar",
+        desc: "State rooftop solar subsidy along with net-metering benefits.",
+        docs: "Latest Electricity Bill (CA Number)\nAadhaar Card of Consumer\nProperty Ownership Document / NOC\nBank Account Details for Subsidy\nRooftop Photograph"
       }
     };
 
-    function runAnalysis() {
-      const q = document.getElementById('rawInput').value.trim().toLowerCase();
-      if (!q) return alert('Kripya scheme ya service ka naam likhein.');
+    function autoFillAI() {
+      const q = document.getElementById('aiInput').value.trim().toLowerCase();
+      if (!q) return alert('Kripya scheme ka naam likhein.');
 
-      const loader = document.getElementById('loader');
-      const box = document.getElementById('reviewBox');
-      loader.style.display = 'block';
-      box.style.display = 'none';
-
-      setTimeout(() => {
-        let match = null;
-        for (let k in knowledgeBase) {
-          if (q.includes(k)) match = knowledgeBase[k];
+      let found = false;
+      for (let k in presets) {
+        if (q.includes(k)) {
+          document.getElementById('sName').value = presets[k].name;
+          document.getElementById('sCat').value = presets[k].cat;
+          document.getElementById('sFee').value = presets[k].fee;
+          document.getElementById('sTime').value = presets[k].time;
+          document.getElementById('sElig').value = presets[k].elig;
+          document.getElementById('sDesc').value = presets[k].desc;
+          document.getElementById('sDocs').value = presets[k].docs;
+          found = true;
+          break;
         }
+      }
 
-        if (!match) {
-          match = {
-            name: document.getElementById('rawInput').value.trim(),
-            category: "Schemes",
-            fee: "₹0 (Free)",
-            processing_time: "15 - 30 Days",
-            eligibility: "Eligible Delhi Residents",
-            desc: "Official Delhi Government welfare initiative.",
-            docs: [
-              "Aadhaar Card (Mobile linked)",
-              "Delhi Address Proof (Voter ID / Electricity Bill)",
-              "Bank Account Passbook / Statement",
-              "Passport Size Photograph"
-            ]
-          };
-        }
+      if (!found) {
+        document.getElementById('sName').value = document.getElementById('aiInput').value.trim();
+        document.getElementById('sCat').value = 'Schemes';
+        document.getElementById('sFee').value = '₹0 (Free)';
+        document.getElementById('sTime').value = '15 - 30 Days';
+        document.getElementById('sElig').value = 'Delhi Residents';
+        document.getElementById('sDesc').value = 'Official Delhi Government welfare scheme.';
+        document.getElementById('sDocs').value = "Aadhaar Card\nDelhi Address Proof\nBank Account Passbook\nPassport Photograph";
+      }
 
-        document.getElementById('draftName').value = match.name;
-        document.getElementById('draftCategory').value = match.category;
-        document.getElementById('draftFee').value = match.fee;
-        document.getElementById('draftTime').value = match.processing_time;
-        document.getElementById('draftEligibility').value = match.eligibility;
-        document.getElementById('draftDesc').value = match.desc;
-        document.getElementById('draftDocs').value = match.docs.join('\n');
-
-        loader.style.display = 'none';
-        box.style.display = 'block';
-      }, 350);
+      alert('Form fill ho gaya hai! Aap manually isko edit ya review kar sakte hain.');
     }
 
-    function approveService() {
-      const item = {
-        name: document.getElementById('draftName').value.trim(),
-        category: document.getElementById('draftCategory').value,
-        fee: document.getElementById('draftFee').value.trim(),
-        processing_time: document.getElementById('draftTime').value.trim(),
-        eligibility: document.getElementById('draftEligibility').value.trim(),
-        description: document.getElementById('draftDesc').value.trim(),
-        documents: document.getElementById('draftDocs').value.split('\n').map(d => d.trim()).filter(Boolean)
+    function generateSnippet() {
+      const name = document.getElementById('sName').value.trim();
+      if (!name) return alert('Kripya Service Name likhein.');
+
+      const docsArray = document.getElementById('sDocs').value
+        .split('\n')
+        .map(d => d.trim())
+        .filter(d => d.length > 0);
+
+      const obj = {
+        id: Date.now(),
+        name: name,
+        category: document.getElementById('sCat').value,
+        fee: document.getElementById('sFee').value.trim() || '₹0 (Free)',
+        time: document.getElementById('sTime').value.trim() || '15 Days',
+        eligibility: document.getElementById('sElig').value.trim() || 'Eligible residents',
+        desc: document.getElementById('sDesc').value.trim() || '',
+        docs: docsArray
       };
 
-      navigator.clipboard.writeText(JSON.stringify(item, null, 2));
-      alert(`✅ Service "${item.name}" APPROVE ho gayi hai!\n\nVerified structured data copy ho gaya hai.`);
-      document.getElementById('reviewBox').style.display = 'none';
-      document.getElementById('rawInput').value = '';
+      const snippet = ",\n  " + JSON.stringify(obj, null, 2);
+      document.getElementById('codeOutput').value = snippet;
+      document.getElementById('outputBox').style.display = 'block';
+    }
+
+    function copyOutput() {
+      const code = document.getElementById('codeOutput').value;
+      navigator.clipboard.writeText(code);
+      alert('Code copy ho gaya! data.js mein jaakar paste kar dein.');
     }
   </script>
 </body>
