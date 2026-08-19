@@ -1,427 +1,169 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Delhi Seva Finder</title>
-
-<style>
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f4f7fb;
-color:#172033;
-}
-header{
-background:linear-gradient(135deg,#0757d5,#123d91);
-color:white;
-text-align:center;
-padding:35px 15px;
-}
-header h1{margin:0 0 8px;font-size:30px}
-header p{margin:0;font-size:15px}
-
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px;
-}
-
-.search{
-background:white;
-padding:18px;
-margin-top:-25px;
-border-radius:15px;
-box-shadow:0 5px 20px #0002;
-}
-
-.search input{
-width:100%;
-padding:15px;
-border:1px solid #ddd;
-border-radius:10px;
-font-size:16px;
-}
-
-.categories{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin:20px 0;
-}
-
-.categories button{
-border:0;
-padding:10px 15px;
-border-radius:20px;
-background:white;
-cursor:pointer;
-}
-
-.categories button.active{
-background:#0757d5;
-color:white;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-gap:18px;
-}
-
-.card{
-background:white;
-border-radius:15px;
-padding:20px;
-box-shadow:0 3px 15px #0001;
-}
-
-.card h2{
-font-size:19px;
-margin:8px 0;
-}
-
-.icon{
-font-size:30px;
-}
-
-.category{
-color:#0757d5;
-font-size:13px;
-font-weight:bold;
-}
-
-.documents{
-margin-top:15px;
-}
-
-.documents li{
-margin:6px 0;
-font-size:14px;
-}
-
-.fee{
-background:#eaf8ed;
-padding:10px;
-border-radius:8px;
-margin-top:15px;
-font-weight:bold;
-}
-
-.buttons{
-display:flex;
-gap:8px;
-margin-top:15px;
-}
-
-.buttons a{
-flex:1;
-text-align:center;
-padding:10px;
-border-radius:8px;
-text-decoration:none;
-font-size:13px;
-}
-
-.official{
-background:#0757d5;
-color:white;
-}
-
-footer{
-margin-top:40px;
-background:#172033;
-color:white;
-text-align:center;
-padding:25px;
-font-size:13px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delhi Seva Finder</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #f8fafc; color: #1e293b; padding-bottom: 50px; }
+    header { background: #0f172a; color: white; padding: 35px 20px; text-align: center; }
+    header h1 { font-size: 24px; margin-bottom: 8px; }
+    header p { color: #94a3b8; font-size: 14px; margin-bottom: 18px; }
+    .search-box { width: 100%; max-width: 550px; padding: 12px 18px; font-size: 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; }
+    .categories { margin-top: 15px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .cat-btn { background: #334155; color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .cat-btn.active { background: #2563eb; }
+    .container { max-width: 900px; margin: 25px auto; padding: 0 16px; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-header h2 { font-size: 18px; color: #0f172a; }
+    .badge { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+    .detail { font-size: 13px; color: #334155; margin: 6px 0; }
+    .docs-list { margin: 6px 0 14px 20px; font-size: 13px; color: #475569; }
+    .btn-link { display: inline-block; background: #2563eb; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; }
+    .status-text { text-align: center; color: #64748b; font-size: 15px; margin-top: 30px; }
+  </style>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
 
-<header>
-<h1>🇮🇳 Delhi Seva Finder</h1>
-<p>Delhi & Central Government Services</p>
-</header>
+  <header>
+    <h1>🏛️ Delhi Seva Finder</h1>
+    <p>Official Delhi & Central Government Services</p>
+    <input type="text" id="searchInput" class="search-box" placeholder="Service search karein... Driving Licence, Income, Pension..." />
+    <div class="categories">
+      <button class="cat-btn active" id="btn-all">All</button>
+      <button class="cat-btn" id="btn-cert">Certificates</button>
+      <button class="cat-btn" id="btn-trans">Transport</button>
+    </div>
+  </header>
 
-<div class="container">
+  <main class="container">
+    <div id="statusMessage" class="status-text">Database se services load ho rahi hain...</div>
+    <div id="servicesContainer"></div>
+  </main>
 
-<div class="search">
-<input
-id="search"
-type="text"
-placeholder="Service search karein... Aadhaar, PAN, Birth Certificate..."
-oninput="showServices()"
->
-</div>
+  <footer style="text-align:center; padding:20px; color:#64748b; font-size:12px; border-top:1px solid #e2e8f0; margin-top:40px;">
+    Official government sources should always be verified before applying.
+  </footer>
 
-<div class="categories">
-<button class="active" onclick="setCategory('All',this)">All</button>
-<button onclick="setCategory('Identity',this)">Identity</button>
-<button onclick="setCategory('Certificates',this)">Certificates</button>
-<button onclick="setCategory('Transport',this)">Transport</button>
-<button onclick="setCategory('Labour',this)">Labour</button>
-<button onclick="setCategory('Education',this)">Education</button>
-<button onclick="setCategory('Schemes',this)">Delhi Schemes</button>
-</div>
+  <script>
+    var SUPABASE_URL = 'https://xncrfxhqvktkkaotpws.supabase.co';
+    var SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
 
-<div class="grid" id="services"></div>
+    var allServices = [];
+    var supabaseClient = null;
 
-</div>
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch(e) {
+      console.error("Supabase init error:", e);
+    }
 
-<footer>
-Delhi Seva Finder<br>
-Official government sources should always be verified before applying.
-</footer>
+    async function loadData() {
+      var status = document.getElementById('statusMessage');
+      if (!supabaseClient) {
+        status.innerText = 'Supabase initialize nahi ho paya.';
+        return;
+      }
 
-<script>
+      try {
+        var response = await supabaseClient
+          .from('services')
+          .select('*')
+          .eq('status', 'published');
 
-const services = [
+        if (response.error) {
+          status.innerText = 'Database Error: ' + response.error.message;
+          return;
+        }
 
-{
-name:"Aadhaar Card",
-icon:"🪪",
-category:"Identity",
-documents:[
-"Aadhaar enrolment ke liye valid identity proof",
-"Address proof",
-"Applicable supporting documents"
-],
-fee:"New enrolment: Free",
-url:"https://uidai.gov.in/"
-},
+        if (!response.data || response.data.length === 0) {
+          status.innerText = 'Koi published service nahi mili.';
+          return;
+        }
 
-{
-name:"PAN Card",
-icon:"💳",
-category:"Identity",
-documents:[
-"Identity proof",
-"Address proof",
-"Date of birth proof"
-],
-fee:"Application type ke according",
-url:"https://www.incometax.gov.in/"
-},
+        allServices = response.data;
+        status.style.display = 'none';
+        render(allServices);
+      } catch (err) {
+        status.innerText = 'Error: ' + err.message;
+      }
+    }
 
-{
-name:"Birth Certificate",
-icon:"👶",
-category:"Certificates",
-documents:[
-"Birth related proof",
-"Parents/applicant identity proof",
-"Address proof",
-"Delayed registration mein additional documents"
-],
-fee:"Service ke according",
-url:"https://delhi.gov.in/"
-},
+    function render(items) {
+      var container = document.getElementById('servicesContainer');
+      container.innerHTML = '';
 
-{
-name:"Death Certificate",
-icon:"📜",
-category:"Certificates",
-documents:[
-"Death related proof",
-"Applicant identity proof",
-"Required registration documents"
-],
-fee:"Service ke according",
-url:"https://delhi.gov.in/"
-},
+      if (items.length === 0) {
+        container.innerHTML = '<p class="status-text">Koi match nahi mila.</p>';
+        return;
+      }
 
-{
-name:"Income Certificate",
-icon:"💰",
-category:"Certificates",
-documents:[
-"Identity proof",
-"Address proof",
-"Income related documents",
-"Applicable declaration/affidavit"
-],
-fee:"Check official e-District portal",
-url:"https://edistrict.delhi.gov.in/"
-},
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var docs = [];
+        if (Array.isArray(item.documents)) {
+          docs = item.documents;
+        } else if (typeof item.documents === 'string') {
+          try { docs = JSON.parse(item.documents); } catch(e) { docs = [item.documents]; }
+        }
 
-{
-name:"Caste Certificate",
-icon:"📄",
-category:"Certificates",
-documents:[
-"Identity proof",
-"Residence proof",
-"Caste related supporting documents"
-],
-fee:"Check official e-District portal",
-url:"https://edistrict.delhi.gov.in/"
-},
+        var docList = '';
+        for (var j = 0; j < docs.length; j++) {
+          docList += '<li>' + docs[j] + '</li>';
+        }
 
-{
-name:"Driving Licence",
-icon:"🚗",
-category:"Transport",
-documents:[
-"Age proof",
-"Address proof",
-"Identity proof",
-"Medical certificate where applicable"
-],
-fee:"Service ke according",
-url:"https://parivahan.gov.in/"
-},
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = 
+          '<div class="card-header">' +
+            '<h2>' + item.name + '</h2>' +
+            '<span class="badge">' + item.category + '</span>' +
+          '</div>' +
+          '<p style="color:#64748b; font-size:14px; margin-bottom:12px;">' + (item.description || '') + '</p>' +
+          '<div class="detail"><strong>Fee:</strong> ' + (item.fee || 'Free') + ' | <strong>Time:</strong> ' + (item.processing_time || 'N/A') + '</div>' +
+          '<div class="detail"><strong>Eligibility:</strong> ' + (item.eligibility || 'Delhi Resident') + '</div>' +
+          '<div class="detail" style="font-weight:bold; margin-top:10px;">Required Documents:</div>' +
+          '<ul class="docs-list">' + docList + '</ul>' +
+          '<a href="' + item.official_url + '" target="_blank" rel="noopener noreferrer" class="btn-link">Official Portal &rarr;</a>';
+        
+        container.appendChild(card);
+      }
+    }
 
-{
-name:"e-Shram Card",
-icon:"👷",
-category:"Labour",
-documents:[
-"Aadhaar",
-"Aadhaar linked mobile number",
-"Bank account details"
-],
-fee:"Free",
-url:"https://eshram.gov.in/"
-},
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      var q = e.target.value.toLowerCase();
+      var filtered = allServices.filter(function(s) {
+        return s.name.toLowerCase().indexOf(q) !== -1 || 
+               (s.description && s.description.toLowerCase().indexOf(q) !== -1) ||
+               s.category.toLowerCase().indexOf(q) !== -1;
+      });
+      render(filtered);
+    });
 
-{
-name:"Passport",
-icon:"🌍",
-category:"Identity",
-documents:[
-"Address proof",
-"Date of birth proof",
-"Category-specific documents"
-],
-fee:"Passport category ke according",
-url:"https://www.passportindia.gov.in/"
-},
+    function setCategory(cat, btn) {
+      var buttons = document.querySelectorAll('.cat-btn');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
+      btn.classList.add('active');
+      if (cat === 'All') {
+        render(allServices);
+      } else {
+        var filtered = allServices.filter(function(s) {
+          return s.category.toLowerCase() === cat.toLowerCase();
+        });
+        render(filtered);
+      }
+    }
 
-{
-name:"Voter ID",
-icon:"🗳️",
-category:"Identity",
-documents:[
-"Age proof",
-"Address proof",
-"Photograph"
-],
-fee:"Free",
-url:"https://voters.eci.gov.in/"
-},
+    document.getElementById('btn-all').onclick = function() { setCategory('All', this); };
+    document.getElementById('btn-cert').onclick = function() { setCategory('Certificates', this); };
+    document.getElementById('btn-trans').onclick = function() { setCategory('Transport', this); };
 
-{
-name:"Delhi Government Schemes",
-icon:"🏛️",
-category:"Schemes",
-documents:[
-"Scheme ke according documents",
-"Identity proof",
-"Delhi residence proof",
-"Income/category documents where applicable"
-],
-fee:"Scheme ke according",
-url:"https://delhi.gov.in/"
-}
-
-];
-
-let category="All";
-
-function setCategory(value,button){
-
-category=value;
-
-document.querySelectorAll(".categories button")
-.forEach(b=>b.classList.remove("active"));
-
-button.classList.add("active");
-
-showServices();
-}
-
-function showServices(){
-
-const search=
-document.getElementById("search")
-.value
-.toLowerCase();
-
-const container=
-document.getElementById("services");
-
-container.innerHTML="";
-
-services
-.filter(service=>{
-
-const categoryMatch=
-category==="All" ||
-service.category===category;
-
-const text=
-(service.name+" "+
-service.category+" "+
-service.documents.join(" "))
-.toLowerCase();
-
-return categoryMatch &&
-text.includes(search);
-
-})
-.forEach(service=>{
-
-container.innerHTML+=`
-
-<div class="card">
-
-<div class="icon">$`{service.icon}</div>
-
-<h2>`${service.name}</h2>
-
-<div class="category">
-$`{service.category}
-</div>
-
-<div class="documents">
-<b>📄 Required Documents</b>
-
-<ul>
-${service.documents .map(d=><li>${d}&lt;/li>)
-.join("")}
-</ul>
-</div>
-
-<div class="fee">
-💰 Fee: `${service.fee}
-</div>
-
-<div class="buttons">
-
-<a
-class="official"
-href="${service.url}"
-target="_blank"
->
-Official Website
-</a>
-
-</div>
-
-</div>
-
-`;
-
-});
-}
-
-showServices();
-
-</script>
-
+    window.onload = loadData;
+  </script>
 </body>
 </html>
