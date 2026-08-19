@@ -49,30 +49,30 @@
   </footer>
 
   <script>
-    const SUPABASE_URL = 'https://xncrfxhqvkttkkaotpws.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
+    var SUPABASE_URL = 'https://xncrfxhqvktkkaotpws.supabase.co';
+    var SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let allServices = [];
+    var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var allServices = [];
 
     async function loadData() {
-      const status = document.getElementById('statusMessage');
+      var status = document.getElementById('statusMessage');
       try {
-        const { data, error } = await supabaseClient
+        var res = await supabaseClient
           .from('services')
           .select('*');
 
-        if (error) {
-          status.innerText = 'Database Error: ' + error.message;
+        if (res.error) {
+          status.innerText = 'Database Error: ' + res.error.message;
           return;
         }
 
-        if (!data || data.length === 0) {
+        if (!res.data || res.data.length === 0) {
           status.innerText = 'Koi service nahi mili.';
           return;
         }
 
-        allServices = data;
+        allServices = res.data;
         status.style.display = 'none';
         render(allServices);
       } catch (err) {
@@ -81,7 +81,7 @@
     }
 
     function render(items) {
-      const container = document.getElementById('servicesContainer');
+      var container = document.getElementById('servicesContainer');
       container.innerHTML = '';
 
       if (items.length === 0) {
@@ -89,51 +89,61 @@
         return;
       }
 
-      items.forEach(item => {
-        let docs = [];
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var docs = [];
         if (Array.isArray(item.documents)) {
           docs = item.documents;
         } else if (typeof item.documents === 'string') {
           try { docs = JSON.parse(item.documents); } catch(e) { docs = [item.documents]; }
         }
 
-        const docList = docs.map(d => `<li>${d}</li>`).join('');
+        var docList = '';
+        for (var j = 0; j < docs.length; j++) {
+          docList += '<li>' + docs[j] + '</li>';
+        }
 
-        const card = document.createElement('div');
+        var card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = `
-          <div class="card-header">
-            <h2>${item.name}</h2>
-            <span class="badge">${item.category}</span>
-          </div>
-          <p style="color:#64748b; font-size:14px; margin-bottom:12px;">${item.description || ''}</p>
-          <div class="detail"><strong>Fee:</strong> ${item.fee || 'Free'} | <strong>Time:</strong> ${item.processing_time || 'N/A'}</div>
-          <div class="detail"><strong>Eligibility:</strong> ${item.eligibility || 'Delhi Resident'}</div>
-          <div class="detail" style="font-weight:bold; margin-top:10px;">Required Documents:</div>
-          <ul class="docs-list">${docList}</ul>
-          <a href="${item.official_url}" target="_blank" rel="noopener noreferrer" class="btn-link">Official Portal &rarr;</a>
-        `;
+        card.innerHTML = 
+          '<div class="card-header">' +
+            '<h2>' + item.name + '</h2>' +
+            '<span class="badge">' + item.category + '</span>' +
+          '</div>' +
+          '<p style="color:#64748b; font-size:14px; margin-bottom:12px;">' + (item.description || '') + '</p>' +
+          '<div class="detail"><strong>Fee:</strong> ' + (item.fee || 'Free') + ' | <strong>Time:</strong> ' + (item.processing_time || 'N/A') + '</div>' +
+          '<div class="detail"><strong>Eligibility:</strong> ' + (item.eligibility || 'Delhi Resident') + '</div>' +
+          '<div class="detail" style="font-weight:bold; margin-top:10px;">Required Documents:</div>' +
+          '<ul class="docs-list">' + docList + '</ul>' +
+          '<a href="' + item.official_url + '" target="_blank" rel="noopener noreferrer" class="btn-link">Official Portal &rarr;</a>';
+        
         container.appendChild(card);
-      });
+      }
     }
 
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      const filtered = allServices.filter(s => 
-        s.name.toLowerCase().includes(q) || 
-        (s.description && s.description.toLowerCase().includes(q)) ||
-        s.category.toLowerCase().includes(q)
-      );
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      var q = e.target.value.toLowerCase();
+      var filtered = allServices.filter(function(s) {
+        return s.name.toLowerCase().indexOf(q) !== -1 || 
+               (s.description && s.description.toLowerCase().indexOf(q) !== -1) ||
+               s.category.toLowerCase().indexOf(q) !== -1;
+      });
       render(filtered);
     });
 
     function setCategory(cat, btn) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      var buttons = document.querySelectorAll('.cat-btn');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
       btn.classList.add('active');
       if (cat === 'All') {
         render(allServices);
       } else {
-        render(allServices.filter(s => s.category.toLowerCase() === cat.toLowerCase()));
+        var filtered = allServices.filter(function(s) {
+          return s.category.toLowerCase() === cat.toLowerCase();
+        });
+        render(filtered);
       }
     }
 
