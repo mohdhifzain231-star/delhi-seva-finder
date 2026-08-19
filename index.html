@@ -9,56 +9,56 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: #f8fafc; color: #1e293b; padding-bottom: 50px; }
     header { background: #1e3a8a; color: white; padding: 35px 20px; text-align: center; }
-    header h1 { font-size: 24px; margin-bottom: 8px; }
-    header p { color: #cbd5e1; font-size: 14px; margin-bottom: 18px; }
-    .search-box { width: 100%; max-width: 600px; padding: 12px 18px; font-size: 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; }
+    header h1 { font-size: 26px; margin-bottom: 8px; }
+    header p { color: #cbd5e1; font-size: 14px; margin-bottom: 20px; }
+    .search-box { width: 100%; max-width: 600px; padding: 13px 18px; font-size: 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .categories { margin-top: 15px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .cat-btn { background: #1e293b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 500; }
-    .cat-btn.active { background: #2563eb; }
+    .cat-btn { background: #1e293b; color: white; border: none; padding: 7px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s; }
+    .cat-btn.active, .cat-btn:hover { background: #2563eb; }
     .container { max-width: 900px; margin: 25px auto; padding: 0 16px; }
-    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .card-header h2 { font-size: 18px; color: #0f172a; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .card-header h2 { font-size: 18px; color: #0f172a; font-weight: 600; }
     .badge { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-    .fee-highlight { background: #ecfdf5; color: #065f46; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: inline-block; margin-bottom: 8px; border: 1px solid #a7f3d0; }
+    .fee-highlight { background: #ecfdf5; color: #065f46; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: inline-block; margin-bottom: 10px; border: 1px solid #a7f3d0; }
     .detail { font-size: 13px; color: #334155; margin: 6px 0; }
-    .docs-list { margin: 6px 0 6px 20px; font-size: 13px; color: #475569; }
-    .status-text { text-align: center; color: #64748b; font-size: 15px; margin-top: 30px; }
+    .docs-list { margin: 6px 0 6px 22px; font-size: 13px; color: #475569; }
+    .docs-list li { margin-bottom: 4px; }
+    .status-text { text-align: center; color: #64748b; font-size: 15px; margin-top: 40px; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
   <header>
     <h1>🏛️ Delhi Seva Finder</h1>
-    <p>Required Documents & Official Government Fees Guide</p>
-    <input type="text" id="searchInput" class="search-box" placeholder="Service search karein... Aadhaar, PAN, DL, Caste, Pension, PCC..." />
+    <p>Official Government Fees & Required Documents Guide</p>
+    <input type="text" id="searchInput" class="search-box" placeholder="Service search karein... Aadhaar, PAN, DL, Caste, Pension, PCC, Schemes..." />
     <div class="categories">
-      <button class="cat-btn active" id="btn-all">All</button>
-      <button class="cat-btn" id="btn-id">Identity</button>
-      <button class="cat-btn" id="btn-cert">Certificates</button>
-      <button class="cat-btn" id="btn-trans">Transport</button>
-      <button class="cat-btn" id="btn-pass">Passport</button>
-      <button class="cat-btn" id="btn-pension">Pension</button>
-      <button class="cat-btn" id="btn-schol">Scholarships</button>
+      <button class="cat-btn active" onclick="filterCategory('All', this)">All</button>
+      <button class="cat-btn" onclick="filterCategory('Identity', this)">Identity</button>
+      <button class="cat-btn" onclick="filterCategory('Certificates', this)">Certificates</button>
+      <button class="cat-btn" onclick="filterCategory('Transport', this)">Transport</button>
+      <button class="cat-btn" onclick="filterCategory('Passport', this)">Passport</button>
+      <button class="cat-btn" onclick="filterCategory('Pension', this)">Pension</button>
+      <button class="cat-btn" onclick="filterCategory('Scholarship', this)">Scholarship</button>
+      <button class="cat-btn" onclick="filterCategory('Schemes', this)">Schemes</button>
     </div>
   </header>
 
   <main class="container">
-    <div id="statusMessage" class="status-text">Services load ho rahi hain...</div>
     <div id="servicesContainer"></div>
   </main>
 
-  <footer style="text-align:center; padding:20px; color:#64748b; font-size:12px; border-top:1px solid #e2e8f0; margin-top:40px;">
-    Official government fees and required documents checklist.
+  <footer style="text-align:center; padding:25px; color:#64748b; font-size:12px; border-top:1px solid #e2e8f0; margin-top:40px;">
+    Delhi & Central Government Citizen Information Portal • Verified Checklists
   </footer>
 
   <script>
-    var DEFAULT_SERVICES = [
+    const servicesData = [
       {
         name: "Aadhaar Enrolment (New)",
         category: "Identity",
-        description: "Fresh enrolment for Aadhaar card generation with biometric capture.",
+        description: "Fresh enrolment for Aadhaar generation with biometric and demographic details capture.",
         fee: "₹0 (Free)",
         processing_time: "Up to 90 Days",
         eligibility: "All resident individuals in India",
@@ -67,173 +67,182 @@
       {
         name: "Aadhaar Demographic Update",
         category: "Identity",
-        description: "Update Name, Address, Date of Birth, Gender, or Mobile Number in Aadhaar.",
-        fee: "₹50 (Online/Center)",
+        description: "Update or correct Name, Address, Date of Birth, Gender, or Mobile Number in Aadhaar.",
+        fee: "₹50",
         processing_time: "5 - 15 Days",
-        eligibility: "Existing Aadhaar card holder",
-        documents: ["Valid Document for specific change (POA/POI/DOB Certificate)", "Aadhaar Linked Mobile No"]
+        eligibility: "Existing Aadhaar card holders",
+        documents: ["Valid Document for requested update (POA/POI/DOB Certificate)", "Aadhaar Linked Mobile Number"]
       },
       {
         name: "Aadhaar Biometric Update",
         category: "Identity",
-        description: "Update fingerprints, iris scan, or facial photograph (Mandatory at age 5 and 15).",
-        fee: "₹100 (Free for children 5-7 & 15-17 yrs)",
+        description: "Update fingerprints, iris scans, or facial photo (Mandatory update at ages 5 and 15).",
+        fee: "₹100 (Free for children aged 5-7 & 15-17 years)",
         processing_time: "7 - 15 Days",
-        eligibility: "Existing Aadhaar card holder",
+        eligibility: "Existing Aadhaar card holders",
         documents: ["Original Aadhaar Card", "Child Birth Certificate (if under 18)"]
       },
       {
-        name: "PAN Card (Instant e-PAN)",
+        name: "Instant e-PAN Card",
         category: "Identity",
-        description: "Digitally signed instant e-PAN in PDF format via Income Tax portal.",
+        description: "Instant issuance of digitally signed PAN in PDF format through Income Tax portal.",
         fee: "₹0 (Free)",
         processing_time: "Instant (10 Minutes)",
-        eligibility: "Individual who has never been allotted a PAN & holds Aadhaar with active mobile",
+        eligibility: "Individual who has never been allotted a PAN & possesses Aadhaar with linked mobile",
         documents: ["Aadhaar Card with active mobile number linked"]
       },
       {
-        name: "New PAN Card / Correction (Physical)",
+        name: "PAN Card Application / Correction (Physical)",
         category: "Identity",
-        description: "Application for physical PAN card issue or details correction (NSDL/UTIITSL).",
-        fee: "₹107 (Physical delivery in India)",
+        description: "New physical PAN card issuance or correction through NSDL / UTIITSL.",
+        fee: "₹107 (For dispatch within India)",
         processing_time: "10 - 15 Days",
-        eligibility: "Indian citizen / Entity requiring tax identification",
-        documents: ["Proof of Identity", "Proof of Address", "Proof of Date of Birth", "2 Passport Photos"]
+        eligibility: "Indian citizen / Entity requiring Permanent Account Number",
+        documents: ["Proof of Identity", "Proof of Address", "Proof of Date of Birth", "2 Recent Passport Size Photographs"]
       },
       {
-        name: "Voter ID (New Form 6 / Update Form 8)",
+        name: "Voter ID Card (Form 6 / Form 8)",
         category: "Identity",
-        description: "Enrolment in Electoral Roll or shifting of residence / correction of entries.",
+        description: "New voter enrolment in Electoral Roll or correction / shifting of assembly constituency.",
         fee: "₹0 (Free)",
         processing_time: "15 - 30 Days",
         eligibility: "Indian Citizen aged 18+ years residing in the constituency",
-        documents: ["Age Proof (Aadhaar/10th Marksheet/Birth Cert)", "Address Proof (Electricity Bill/Rent Agreement)", "1 Passport Photo"]
+        documents: ["Age Proof (Aadhaar / 10th Certificate / Birth Cert)", "Address Proof (Electricity Bill / Water Bill / Rent Agreement)", "1 Passport Photo"]
       },
       {
-        name: "e-Shram Card",
+        name: "e-Shram Card Registration",
         category: "Identity",
         description: "National database registration for unorganised sector workers for social security benefits.",
         fee: "₹0 (Free)",
         processing_time: "Instant",
-        eligibility: "Unorganised workers aged 16-59 years (Not an EPFO/ESIC member or Income Tax payee)",
-        documents: ["Aadhaar Card", "Aadhaar Linked Mobile Number", "Bank Account Details (IFSC & Acc No)"]
+        eligibility: "Unorganised workers aged 16-59 years (Not members of EPFO/ESIC or Income Tax payees)",
+        documents: ["Aadhaar Card", "Aadhaar Linked Active Mobile Number", "Bank Account Details (Account No & IFSC)"]
+      },
+      {
+        name: "Income Certificate (Delhi e-District)",
+        category: "Certificates",
+        description: "Official income certificate issued by Revenue Department, Govt of NCT of Delhi.",
+        fee: "₹0 (Free)",
+        processing_time: "14 Days",
+        eligibility: "Delhi resident with valid address proof and family income",
+        documents: ["Identity Proof (Aadhaar / Voter ID)", "Delhi Residence Proof (Past 3 Years)", "Salary Slip / Form 16 / Bank Statement / Income Affidavit", "1 Passport Photo"]
+      },
+      {
+        name: "Caste Certificate (SC/ST - Delhi e-District)",
+        category: "Certificates",
+        description: "Official SC/ST certificate issued by Revenue Department, Govt of NCT of Delhi.",
+        fee: "₹0 (Free)",
+        processing_time: "14 Days",
+        eligibility: "Delhi resident belonging to notified SC/ST community with Delhi/paternal lineage",
+        documents: ["Applicant ID & Address Proof", "Father / Blood Relative SC/ST Certificate", "Self-Declaration Affidavit", "1 Passport Photo"]
+      },
+      {
+        name: "OBC / Non-Creamy Layer (NCL) Certificate",
+        category: "Certificates",
+        description: "OBC certificate and Non-Creamy Layer certification for educational & employment quota.",
+        fee: "₹0 (Free)",
+        processing_time: "14 Days",
+        eligibility: "Notified OBC category resident of Delhi since 1993 with annual family income under ₹8 Lakh",
+        documents: ["ID & Address Proof", "Proof of continuous residence in Delhi since 1993", "Family Income Proof / ITR / Form 16", "Blood Relative OBC Certificate", "1 Passport Photo"]
+      },
+      {
+        name: "Economically Weaker Section (EWS) Certificate",
+        category: "Certificates",
+        description: "Income & Asset certificate for 10% general category reservation in jobs & admissions.",
+        fee: "₹0 (Free)",
+        processing_time: "14 Days",
+        eligibility: "Delhi resident not covered under SC/ST/OBC with gross family annual income under ₹8 Lakh",
+        documents: ["Aadhaar Card", "Delhi Residence Proof (Past 3 Years)", "Complete Family Income Documents / Salary Slips", "Property & Land Record Documents", "Notarized Affidavit", "1 Passport Photo"]
+      },
+      {
+        name: "Domicile / Residence Certificate (Delhi e-District)",
+        category: "Certificates",
+        description: "Official certificate confirming continuous residence in NCT of Delhi.",
+        fee: "₹0 (Free)",
+        processing_time: "14 Days",
+        eligibility: "Continuous resident of Delhi for at least the last 3 years",
+        documents: ["Aadhaar Card", "3 Consecutive Years of Residence Proof (Electricity/Water Bill, School Certificate)", "1 Passport Photo"]
       },
       {
         name: "Birth Certificate",
         category: "Certificates",
         description: "Official birth registration and certificate issuance by MCD / NDMC.",
-        fee: "₹21 (Late fees apply if delayed)",
+        fee: "₹21 (Late fees apply if registration is delayed)",
         processing_time: "7 - 14 Days",
         eligibility: "Birth occurred within NCT of Delhi jurisdiction",
-        documents: ["Hospital Discharge Summary / Birth Slip", "Parents Aadhaar Card", "Address Proof of Delhi"]
+        documents: ["Hospital Discharge Summary / Institutional Birth Slip", "Parents Aadhaar Cards", "Delhi Residence Proof"]
       },
       {
         name: "Death Certificate",
         category: "Certificates",
-        description: "Official death registration and issuance by local municipal body (MCD/NDMC).",
+        description: "Official death registration and certificate issuance by MCD / NDMC.",
         fee: "₹21",
         processing_time: "7 - 14 Days",
         eligibility: "Death occurred within NCT of Delhi jurisdiction",
-        documents: ["Hospital Death Summary / Cremation or Burial Slip", "Deceased Aadhaar Card", "Applicant ID Proof"]
-      },
-      {
-        name: "Income Certificate",
-        category: "Certificates",
-        description: "Official income certification issued by Revenue Department, Govt of NCT of Delhi.",
-        fee: "₹0 (Free)",
-        processing_time: "14 Days",
-        eligibility: "Delhi resident with valid address proof and regular family income source",
-        documents: ["Identity Proof", "Delhi Residence Proof (3 Years)", "Salary Slip / Bank Statement / Income Affidavit", "Passport Photo"]
-      },
-      {
-        name: "Caste Certificate (SC/ST)",
-        category: "Certificates",
-        description: "Certification of SC/ST status issued by Revenue Department Delhi.",
-        fee: "₹0 (Free)",
-        processing_time: "14 Days",
-        eligibility: "Resident belonging to SC/ST community with Delhi/paternal lineage",
-        documents: ["Applicant ID Proof", "Address Proof", "Father/Blood Relative SC/ST Certificate", "Self-Declaration Affidavit", "Photo"]
-      },
-      {
-        name: "OBC Certificate / Non-Creamy Layer (NCL)",
-        category: "Certificates",
-        description: "OBC certificate and Non-Creamy Layer verification for state/central quota.",
-        fee: "₹0 (Free)",
-        processing_time: "14 Days",
-        eligibility: "Resident belonging to notified OBC category with family income under ₹8 Lakh/yr",
-        documents: ["ID Proof", "Proof of continuous residence in Delhi since 1993", "Family Income Proof / ITR", "Blood Relative OBC Certificate", "Photo"]
-      },
-      {
-        name: "Economically Weaker Section (EWS) Certificate",
-        category: "Certificates",
-        description: "Income & Asset certificate for 10% reservation in education/jobs for general category.",
-        fee: "₹0 (Free)",
-        processing_time: "14 Days",
-        eligibility: "Gross family annual income under ₹8 Lakh, resident of Delhi, not covered under SC/ST/OBC",
-        documents: ["Aadhaar Card", "Delhi Residence Proof", "Complete Family Income Proof / Salary Slips / Form 16", "Property/Land Records Proof", "Affidavit", "Photo"]
+        documents: ["Hospital Death Report / Cremation or Burial Ground Slip", "Deceased Aadhaar Card", "Applicant ID Proof"]
       },
       {
         name: "Learner Driving Licence (LL)",
         category: "Transport",
-        description: "Provisional driving permit issued online through Aadhaar authentication test.",
-        fee: "₹150 + ₹50 (Test fee)",
-        processing_time: "Instant (After online test)",
-        eligibility: "Age 18+ for MCWG/LMV (Age 16+ for 50cc gearless vehicle with parent consent)",
-        documents: ["Aadhaar Card (for contactless online application)", "Form 1 Medical Self-Declaration", "Photo & Signature Upload"]
+        description: "Provisional driving licence issued through online Aadhaar-authenticated test.",
+        fee: "₹150 (Application) + ₹50 (Test fee)",
+        processing_time: "Instant (After passing online test)",
+        eligibility: "Age 18+ for MCWG/LMV (Age 16+ for 50cc gearless two-wheeler)",
+        documents: ["Aadhaar Card (for contactless online test)", "Form 1 Medical Self-Declaration", "Passport Photo & Signature Upload"]
       },
       {
         name: "Permanent Driving Licence (DL)",
         category: "Transport",
-        description: "Full driving licence after passing practical test at Automated Driving Test Track.",
-        fee: "₹200 + ₹300 (Test fee)",
+        description: "Regular driving licence issue after passing driving test on automated track.",
+        fee: "₹200 (Licence) + ₹300 (Test fee)",
         processing_time: "Same Day (Dispatched via Speed Post)",
         eligibility: "Valid Learner Licence holder (minimum 30 days old and under 180 days)",
-        documents: ["Original Learner Licence", "Vehicle of respective category with valid RC/Insurance/PUC", "Slot Booking Appointment Slip"]
+        documents: ["Original Learner Licence", "Vehicle of respective category with valid RC, Insurance & PUC", "Online Slot Booking Appointment Slip"]
       },
       {
         name: "Driving Licence Renewal",
         category: "Transport",
-        description: "Renewal of expired or soon-to-expire commercial or non-commercial DL.",
-        fee: "₹200 (Late fee: ₹300 + ₹1000/yr if delayed past grace period)",
+        description: "Renewal of expiring or expired commercial and non-commercial driving licences.",
+        fee: "₹200 (Late fee: ₹300 + ₹1,000/year if delayed past grace period)",
         processing_time: "7 - 10 Days",
-        eligibility: "Holders of valid or expired Indian driving licence",
-        documents: ["Existing Driving Licence", "Form 1-A Medical Certificate (if age > 40)", "Address Proof", "Passport Photo"]
+        eligibility: "Holders of Indian driving licence needing renewal",
+        documents: ["Original Driving Licence", "Form 1-A Medical Certificate (if age > 40)", "Address Proof", "1 Passport Photo"]
       },
       {
         name: "Vehicle Registration (RC) Transfer of Ownership",
         category: "Transport",
-        description: "Transferring vehicle RC upon sale/purchase within Delhi or inter-state.",
-        fee: "₹150 (Two-wheeler) / ₹300 - ₹500 (LMV/Car)",
+        description: "Ownership transfer upon vehicle sale or purchase within Delhi / Inter-state.",
+        fee: "₹150 (Two-Wheeler) / ₹300 - ₹500 (LMV/Car)",
         processing_time: "15 - 30 Days",
-        eligibility: "Registered owner & buyer with valid Delhi address",
-        documents: ["Form 29 & Form 30", "Original RC", "Valid Insurance Copy", "Valid PUC Certificate", "Buyer Address Proof & PAN"]
+        eligibility: "Vehicle seller and buyer residing in Delhi jurisdiction",
+        documents: ["Form 29 & Form 30", "Original RC", "Valid Vehicle Insurance Copy", "Valid PUC Certificate", "Buyer Delhi Address Proof & PAN"]
       },
       {
         name: "Fresh Passport (Normal / Tatkaal)",
         category: "Passport",
-        description: "Standard 36/60-page Indian Passport booklet issue through Passport Seva Kendra.",
+        description: "Standard 36/60-page Indian Passport issuance through Passport Seva Kendra (PSK).",
         fee: "₹1,500 (Normal 36 pages) | ₹3,500 (Tatkaal)",
         processing_time: "15 - 30 Days (Normal) | 1 - 3 Days (Tatkaal)",
         eligibility: "Indian Citizens by birth or naturalization",
-        documents: ["Proof of Date of Birth (Birth Cert/Marksheet/Aadhaar)", "Proof of Present Address (Aadhaar/Passbook/Voter ID)", "Non-ECR Proof (10th Pass Certificate)"]
+        documents: ["Proof of Date of Birth (Birth Cert / Marksheet / Aadhaar)", "Proof of Present Address (Aadhaar / Bank Passbook / Voter ID)", "Non-ECR Proof (10th Pass Certificate or higher)"]
       },
       {
         name: "Passport Re-issue",
         category: "Passport",
-        description: "Re-issue due to expiry, exhaustion of pages, change in details, or damaged/lost booklet.",
+        description: "Passport re-issue due to page exhaustion, validity expiry, name/address change, or damage/loss.",
         fee: "₹1,500 (Normal 36 pages) | ₹3,000 (Lost/Damaged Normal)",
         processing_time: "10 - 20 Days",
         eligibility: "Existing Indian Passport holders",
-        documents: ["Old Original Passport with self-attested copies of first 2 & last 2 pages", "Proof of Address (if changed)", "Annexure F / Police Report (if lost)"]
+        documents: ["Old Original Passport with self-attested copies of first 2 & last 2 pages", "Proof of Address (if changed)", "Annexure F / Police Report (if lost or completely damaged)"]
       },
       {
         name: "Police Clearance Certificate (PCC)",
         category: "Passport",
-        description: "Clearance issued by Passport Office / Delhi Police for employment or immigration abroad.",
-        fee: "₹500 (Passport Office) / ₹250 (Delhi Police Portal)",
+        description: "Clearance issued by Regional Passport Office (RPO) / Delhi Police for employment or visa abroad.",
+        fee: "₹500 (Passport Seva Kendra) / ₹250 (Delhi Police Citizen Portal)",
         processing_time: "7 - 14 Days",
-        eligibility: "Valid Indian passport holders applying for foreign visa/job/residency",
-        documents: ["Valid Indian Passport in Original with self-attested copies", "Proof of Present Address", "Documentary Proof of Applying for Residential/Work Visa"]
+        eligibility: "Valid Indian passport holders applying for foreign visa, job, or residency",
+        documents: ["Original Valid Indian Passport with self-attested copies", "Proof of Present Address", "Documentary Proof of Visa Application / University Offer / Job Letter"]
       },
       {
         name: "Delhi Old Age Pension Scheme",
@@ -242,127 +251,91 @@
         fee: "₹0 (Free)",
         processing_time: "30 - 45 Days",
         eligibility: "Age 60+ years, resident of Delhi for 5+ years, family annual income under ₹1,00,000",
-        documents: ["Age Proof (Aadhaar/Voter ID/Birth Cert)", "5 Years Residence Proof in Delhi", "Delhi Bank Passbook (Single Account)", "Income Self-Declaration Affidavit", "Passport Photo"]
+        documents: ["Age Proof (Aadhaar / Voter ID / Birth Cert)", "5 Years Continuous Residence Proof in Delhi", "Delhi Bank Passbook (Single Account)", "Income Self-Declaration Affidavit", "1 Passport Photo"]
       },
       {
         name: "Delhi Disability Pension Scheme",
         category: "Pension",
-        description: "Monthly assistance of ₹2,500 for persons with disabilities residing in Delhi.",
+        description: "Monthly financial assistance of ₹2,500 for persons with disabilities.",
         fee: "₹0 (Free)",
         processing_time: "30 Days",
         eligibility: "Disability 40% or above, Delhi resident for 3+ years, annual family income under ₹1,00,000",
-        documents: ["Disability Certificate / UDID Card issued by Govt Hospital", "Aadhaar Card", "Delhi Residence Proof", "Bank Account Passbook (Single Account)", "Photo"]
+        documents: ["Disability Certificate / UDID Card issued by Govt Hospital", "Aadhaar Card", "Delhi Residence Proof (Past 3 Years)", "Bank Account Passbook (Single Account)", "1 Passport Photo"]
       },
       {
-        name: "Delhi State / Pre & Post Matric Scholarships",
-        category: "Scholarships",
-        description: "Financial aid & reimbursement of tuition fees for SC/ST/OBC/Minority students.",
+        name: "Delhi State Pre & Post Matric Scholarships",
+        category: "Scholarship",
+        description: "Financial assistance and tuition reimbursement for SC/ST/OBC/Minority students in Delhi.",
         fee: "₹0 (Free)",
         processing_time: "As per Academic Cycle",
-        eligibility: "Students enrolled in recognized schools/colleges in Delhi with income under ₹2.5 Lakh/yr",
-        documents: ["Student Aadhaar Card", "Previous Year Marksheet", "Current Year Fee Receipt / Bonafide Certificate", "Caste / Minority Certificate", "Family Income Certificate", "Bank Passbook Linked with Aadhaar"]
+        eligibility: "Students enrolled in recognized schools/colleges in Delhi with family income under ₹2.5 Lakh/yr",
+        documents: ["Student Aadhaar Card", "Previous Year Marksheet", "Current Year Fee Receipt / Bonafide Certificate", "Caste / Minority Certificate", "Family Income Certificate", "Aadhaar Linked Bank Passbook"]
+      },
+      {
+        name: "Delhi Ladli Scheme (Govt Scheme)",
+        category: "Schemes",
+        description: "Financial aid deposited into fixed deposits at different school milestones for girl child in Delhi.",
+        fee: "₹0 (Free)",
+        processing_time: "21 - 30 Days",
+        eligibility: "Girl born in Delhi, family annual income under ₹1 Lakh, family resident of Delhi for 3+ years",
+        documents: ["Birth Certificate of Girl Child (MCD/NDMC)", "3 Years Delhi Residence Proof of Parents", "Parents Income Declaration / Certificate", "Aadhaar Cards of Parents & Child", "School Admission Slip / Bonafide (if school-going)"]
       }
     ];
 
-    var SUPABASE_URL = 'https://xncrfxhqvkttkkaotpws.supabase.co';
-    var SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
-
-    var allServices = DEFAULT_SERVICES;
-
-    async function loadData() {
-      var status = document.getElementById('statusMessage');
-      try {
-        if (window.supabase) {
-          var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          var res = await client.from('services').select('*').order('name', { ascending: true });
-          if (res.data && res.data.length > 0) {
-            allServices = res.data;
-          }
-        }
-      } catch (e) {
-        console.log('Supabase offline or resolving, using cached data');
-      }
-
-      status.style.display = 'none';
-      render(allServices);
-    }
+    let activeCategory = 'All';
 
     function render(items) {
-      var container = document.getElementById('servicesContainer');
+      const container = document.getElementById('servicesContainer');
       container.innerHTML = '';
 
       if (!items || items.length === 0) {
-        container.innerHTML = '<p class="status-text">Koi match nahi mila.</p>';
+        container.innerHTML = '<p class="status-text">Koi matching service nahi mili.</p>';
         return;
       }
 
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        var docs = [];
-        if (Array.isArray(item.documents)) {
-          docs = item.documents;
-        } else if (typeof item.documents === 'string') {
-          try { docs = JSON.parse(item.documents); } catch(e) { docs = [item.documents]; }
-        }
-
-        var docList = '';
-        for (var j = 0; j < docs.length; j++) {
-          docList += '<li>' + docs[j] + '</li>';
-        }
-
-        var card = document.createElement('div');
+      items.forEach(item => {
+        const docList = item.documents.map(d => `<li>${d}</li>`).join('');
+        const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = 
-          '<div class="card-header">' +
-            '<h2>' + item.name + '</h2>' +
-            '<span class="badge">' + item.category + '</span>' +
-          '</div>' +
-          '<div class="fee-highlight">Official Govt Fee: ' + (item.fee || '₹0 (Free)') + '</div>' +
-          '<p style="color:#64748b; font-size:13px; margin-bottom:10px;">' + (item.description || '') + '</p>' +
-          '<div class="detail"><strong>Processing Time:</strong> ' + (item.processing_time || 'N/A') + '</div>' +
-          '<div class="detail"><strong>Eligibility:</strong> ' + (item.eligibility || 'Delhi Resident / Eligible Citizen') + '</div>' +
-          '<div class="detail" style="font-weight:bold; margin-top:10px; color:#0f172a;">📄 Required Documents:</div>' +
-          '<ul class="docs-list">' + docList + '</ul>';
-        
+        card.innerHTML = `
+          <div class="card-header">
+            <h2>${item.name}</h2>
+            <span class="badge">${item.category}</span>
+          </div>
+          <div class="fee-highlight">Official Govt Fee: ${item.fee}</div>
+          <p style="color:#64748b; font-size:13px; margin-bottom:10px;">${item.description}</p>
+          <div class="detail"><strong>Processing Time:</strong> ${item.processing_time}</div>
+          <div class="detail"><strong>Eligibility:</strong> ${item.eligibility}</div>
+          <div class="detail" style="font-weight:bold; margin-top:12px; color:#0f172a;">📄 Required Documents:</div>
+          <ul class="docs-list">${docList}</ul>
+        `;
         container.appendChild(card);
-      }
+      });
     }
 
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-      var q = e.target.value.toLowerCase();
-      var filtered = allServices.filter(function(s) {
-        return s.name.toLowerCase().indexOf(q) !== -1 || 
-               (s.description && s.description.toLowerCase().indexOf(q) !== -1) ||
-               s.category.toLowerCase().indexOf(q) !== -1;
+    function filterCategory(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = servicesData.filter(s => {
+        const matchesCat = activeCategory === 'All' || s.category.toLowerCase() === activeCategory.toLowerCase();
+        const matchesQuery = s.name.toLowerCase().includes(query) || 
+                             s.description.toLowerCase().includes(query) ||
+                             s.category.toLowerCase().includes(query);
+        return matchesCat && matchesQuery;
       });
       render(filtered);
-    });
-
-    function setCategory(cat, btn) {
-      var buttons = document.querySelectorAll('.cat-btn');
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('active');
-      }
-      btn.classList.add('active');
-      if (cat === 'All') {
-        render(allServices);
-      } else {
-        var filtered = allServices.filter(function(s) {
-          return s.category.toLowerCase() === cat.toLowerCase();
-        });
-        render(filtered);
-      }
     }
 
-    document.getElementById('btn-all').onclick = function() { setCategory('All', this); };
-    document.getElementById('btn-id').onclick = function() { setCategory('Identity', this); };
-    document.getElementById('btn-cert').onclick = function() { setCategory('Certificates', this); };
-    document.getElementById('btn-trans').onclick = function() { setCategory('Transport', this); };
-    document.getElementById('btn-pass').onclick = function() { setCategory('Passport', this); };
-    document.getElementById('btn-pension').onclick = function() { setCategory('Pension', this); };
-    document.getElementById('btn-schol').onclick = function() { setCategory('Scholarships', this); };
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
 
-    window.onload = loadData;
+    // Initial render on load
+    render(servicesData);
   </script>
 </body>
 </html>
