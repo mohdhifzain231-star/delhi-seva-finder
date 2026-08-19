@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Delhi Seva Finder</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: #f8fafc; color: #1e293b; padding-bottom: 50px; }
-    header { background: #0f172a; color: white; padding: 35px 20px; text-align: center; }
+    header { background: #1e3a8a; color: white; padding: 35px 20px; text-align: center; }
     header h1 { font-size: 24px; margin-bottom: 8px; }
-    header p { color: #94a3b8; font-size: 14px; margin-bottom: 18px; }
+    header p { color: #cbd5e1; font-size: 14px; margin-bottom: 18px; }
     .search-box { width: 100%; max-width: 550px; padding: 12px 18px; font-size: 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; }
     .categories { margin-top: 15px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .cat-btn { background: #334155; color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .cat-btn { background: #1e293b; color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; }
     .cat-btn.active { background: #2563eb; }
     .container { max-width: 900px; margin: 25px auto; padding: 0 16px; }
     .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -24,7 +24,7 @@
     .btn-link { display: inline-block; background: #2563eb; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; }
     .status-text { text-align: center; color: #64748b; font-size: 15px; margin-top: 30px; }
   </style>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -49,51 +49,39 @@
   </footer>
 
   <script>
-    var SUPABASE_URL = 'https://xncrfxhqvktkkaotpws.supabase.co';
-    var SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
+    const SUPABASE_URL = 'https://xncrfxhqvkttkkaotpws.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_f9gDPNxJvwH9wrfxxGrnRg_qpRIs8bo';
 
-    var allServices = [];
-    var supabaseClient = null;
-
-    try {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } catch(e) {
-      console.error("Supabase init error:", e);
-    }
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let allServices = [];
 
     async function loadData() {
-      var status = document.getElementById('statusMessage');
-      if (!supabaseClient) {
-        status.innerText = 'Supabase initialize nahi ho paya.';
-        return;
-      }
-
+      const status = document.getElementById('statusMessage');
       try {
-        var response = await supabaseClient
+        const { data, error } = await supabaseClient
           .from('services')
-          .select('*')
-          .eq('status', 'published');
+          .select('*');
 
-        if (response.error) {
-          status.innerText = 'Database Error: ' + response.error.message;
+        if (error) {
+          status.innerText = 'Database Error: ' + error.message;
           return;
         }
 
-        if (!response.data || response.data.length === 0) {
-          status.innerText = 'Koi published service nahi mili.';
+        if (!data || data.length === 0) {
+          status.innerText = 'Koi service nahi mili.';
           return;
         }
 
-        allServices = response.data;
+        allServices = data;
         status.style.display = 'none';
         render(allServices);
       } catch (err) {
-        status.innerText = 'Error: ' + err.message;
+        status.innerText = 'Fetch Error: ' + err.message;
       }
     }
 
     function render(items) {
-      var container = document.getElementById('servicesContainer');
+      const container = document.getElementById('servicesContainer');
       container.innerHTML = '';
 
       if (items.length === 0) {
@@ -101,61 +89,51 @@
         return;
       }
 
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        var docs = [];
+      items.forEach(item => {
+        let docs = [];
         if (Array.isArray(item.documents)) {
           docs = item.documents;
         } else if (typeof item.documents === 'string') {
           try { docs = JSON.parse(item.documents); } catch(e) { docs = [item.documents]; }
         }
 
-        var docList = '';
-        for (var j = 0; j < docs.length; j++) {
-          docList += '<li>' + docs[j] + '</li>';
-        }
+        const docList = docs.map(d => `<li>${d}</li>`).join('');
 
-        var card = document.createElement('div');
+        const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = 
-          '<div class="card-header">' +
-            '<h2>' + item.name + '</h2>' +
-            '<span class="badge">' + item.category + '</span>' +
-          '</div>' +
-          '<p style="color:#64748b; font-size:14px; margin-bottom:12px;">' + (item.description || '') + '</p>' +
-          '<div class="detail"><strong>Fee:</strong> ' + (item.fee || 'Free') + ' | <strong>Time:</strong> ' + (item.processing_time || 'N/A') + '</div>' +
-          '<div class="detail"><strong>Eligibility:</strong> ' + (item.eligibility || 'Delhi Resident') + '</div>' +
-          '<div class="detail" style="font-weight:bold; margin-top:10px;">Required Documents:</div>' +
-          '<ul class="docs-list">' + docList + '</ul>' +
-          '<a href="' + item.official_url + '" target="_blank" rel="noopener noreferrer" class="btn-link">Official Portal &rarr;</a>';
-        
+        card.innerHTML = `
+          <div class="card-header">
+            <h2>${item.name}</h2>
+            <span class="badge">${item.category}</span>
+          </div>
+          <p style="color:#64748b; font-size:14px; margin-bottom:12px;">${item.description || ''}</p>
+          <div class="detail"><strong>Fee:</strong> ${item.fee || 'Free'} | <strong>Time:</strong> ${item.processing_time || 'N/A'}</div>
+          <div class="detail"><strong>Eligibility:</strong> ${item.eligibility || 'Delhi Resident'}</div>
+          <div class="detail" style="font-weight:bold; margin-top:10px;">Required Documents:</div>
+          <ul class="docs-list">${docList}</ul>
+          <a href="${item.official_url}" target="_blank" rel="noopener noreferrer" class="btn-link">Official Portal &rarr;</a>
+        `;
         container.appendChild(card);
-      }
+      });
     }
 
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-      var q = e.target.value.toLowerCase();
-      var filtered = allServices.filter(function(s) {
-        return s.name.toLowerCase().indexOf(q) !== -1 || 
-               (s.description && s.description.toLowerCase().indexOf(q) !== -1) ||
-               s.category.toLowerCase().indexOf(q) !== -1;
-      });
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allServices.filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        (s.description && s.description.toLowerCase().includes(q)) ||
+        s.category.toLowerCase().includes(q)
+      );
       render(filtered);
     });
 
     function setCategory(cat, btn) {
-      var buttons = document.querySelectorAll('.cat-btn');
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('active');
-      }
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       if (cat === 'All') {
         render(allServices);
       } else {
-        var filtered = allServices.filter(function(s) {
-          return s.category.toLowerCase() === cat.toLowerCase();
-        });
-        render(filtered);
+        render(allServices.filter(s => s.category.toLowerCase() === cat.toLowerCase()));
       }
     }
 
