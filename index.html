@@ -14,50 +14,49 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
     
     body { 
-      background-color: #f8fafc;
+      background-color: #f1f5f9;
       color: #0f172a;
       min-height: 100vh;
     }
 
-    /* Top Parliament Landscape Hero Header */
+    /* Custom Uploaded Parliament Landscape Banner */
     .hero-banner {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.75) 100%), 
-                  url('https://images.unsplash.com/photo-1597040663342-45b6af3d91a3?auto=format&fit=crop&w=2000&q=85') no-repeat center 35%;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.8) 100%), 
+                  url('parliament.jpg') no-repeat center 30%;
       background-size: cover;
-      padding: 40px 15px 70px 15px;
+      padding: 35px 15px 75px 15px;
       text-align: center;
       position: relative;
-      border-bottom: 3px solid #0284c7;
+      border-bottom: 4px solid #0284c7;
     }
 
     .brand-logo-card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.98);
       padding: 14px 28px;
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
       margin-bottom: 12px;
       display: inline-block;
     }
 
     .brand-logo {
       width: 100%;
-      max-width: 320px;
+      max-width: 310px;
       height: auto;
       display: block;
     }
 
     .header-tagline {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.95);
+      background: #ffffff;
       color: #0369a1;
       font-size: 13.5px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      padding: 7px 20px;
+      padding: 7px 22px;
       border-radius: 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     }
 
     .container { 
@@ -68,14 +67,13 @@
       z-index: 10;
     }
 
-    /* Controls Bar Overlay */
     .controls-wrapper {
       background: #ffffff;
-      border: 1.5px solid #e2e8f0;
+      border: 1.5px solid #cbd5e1;
       border-radius: 18px;
       padding: 16px 20px;
       margin-bottom: 30px;
-      box-shadow: 0 15px 35px -5px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.12);
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
@@ -134,7 +132,6 @@
       background: #fff;
     }
 
-    /* Cards Grid */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 22px; }
     
     .card { 
@@ -146,13 +143,12 @@
       flex-direction: column; 
       justify-content: space-between; 
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .card:hover { 
       transform: translateY(-4px); 
       box-shadow: 0 16px 30px -8px rgba(15, 23, 42, 0.1); 
-      border-color: #38bdf8;
     }
     
     .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -239,8 +235,6 @@
       box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
     }
 
-    .copy-btn:hover { opacity: 0.92; }
-
     footer { 
       text-align: center; 
       margin-top: 45px; 
@@ -254,7 +248,7 @@
 </head>
 <body>
 
-  <!-- Full Parliament Landscape Header Section -->
+  <!-- Uploaded Parliament Landscape Banner -->
   <header class="hero-banner">
     <div class="brand-logo-card">
       <img src="logo.png" alt="Delhi Seva Finder Logo" class="brand-logo">
