@@ -1,4 +1,4 @@
-const servicesData = [
+8const servicesData = [
   {
     id: 1,
     name: "Aadhaar Card - New Enrolment",
@@ -275,4 +275,19 @@ const servicesData = [
       "Passport Size Photograph"
     ]
   }
+,
+  {
+  "id": 1787208091101,
+  "name": "E Shram Card",
+  "category": "Schemes",
+  "fee": "100",
+  "time": "Instant",
+  "eligibility": "Unorganised Workers (Age: 16-59)",
+  "desc": "Central Government welfare scheme for Unorganised Workers",
+  "docs": [
+    "Aadhaar Card",
+    "Aadhaar-Linked Mobile Number",
+    "Bank Account Details"
+  ]
+    }
 ];
